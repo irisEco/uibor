@@ -98,7 +98,7 @@ func (s *Server) Hander(conn net.Conn) {
 		select {
 		case <-isLive:
 			//如果用户是活跃状态不做任何事
-		case <-time.After(time.Second * 10): //5s触发定时器
+		case <-time.After(time.Second * 5): //5s触发定时器
 			//已经超时
 			//将当前的user强制关闭
 			user.SendMsg("超时未活跃,你被踢了.")

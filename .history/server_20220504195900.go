@@ -6,7 +6,6 @@ import (
 	"math/rand"
 	"net"
 	"sync"
-	"time"
 )
 
 type Server struct {
@@ -53,19 +52,20 @@ func (s *Server) ListenMessage() {
 //随机字符串
 //todo 可扩展为随机中文字符串
 func GetRandomString(n int) string {
-	str := "0123456789abcdefghijklmnopqrstuvwxyz"
-	bytes := []byte(str)
-	var result []byte
-	for i := 0; i < n; i++ {
-		result = append(result, bytes[rand.Intn(len(bytes))])
-	}
-	return string(result)
+   str := "0123456789abcdefghijklmnopqrstuvwxyz"
+   bytes := []byte(str)
+   var result []byte
+   for i := 0; i < n; i++ {
+      result = append(result, bytes[rand.Intn(len(bytes))])
+   }
+   return string(result)
 }
+
 
 //处理客户端业务
 func (s *Server) Hander(conn net.Conn) {
 	//用户上线
-	user := NewUser(conn, s)
+	user := NewUser(conn,s)
 	user.Online()
 
 	//监听用户是否活跃的channel
@@ -86,32 +86,18 @@ func (s *Server) Hander(conn net.Conn) {
 			}
 			msg := string(buf[:n-1])
 
-			user.Domessage(msg)
+			user.Domessage(msg)	
 
 			// 任何消息,代表当前用户活跃
-			isLive <- true
+			isLive <- true	
 		}
 	}()
 
-	// 当前handler阻塞
-	for {
-		select {
-		case <-isLive:
-			//如果用户是活跃状态不做任何事
-		case <-time.After(time.Second * 10): //5s触发定时器
-			//已经超时
-			//将当前的user强制关闭
-			user.SendMsg("超时未活跃,你被踢了.")
-			//关闭资源
-			close(user.C)
-			//断开链接
-			conn.Close()
-			//退出当前Handler
-			//runtime.Goexit()
-			return
-		}
-	}
+	 // 当前handler阻塞
+    
 }
+
+
 
 //启动服务器的接口
 func (s *Server) Start() {

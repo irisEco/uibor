@@ -100,6 +100,10 @@ func (u *User) ListenMessage() {
 		msg := <-u.C
 		u.conn.Write([]byte(msg + "\n"))
 	}
+	for {
+		msg := <-u.C
+		u.conn.Write([]byte(msg + "\n"))
+	}
 }
 
 //发送消息
