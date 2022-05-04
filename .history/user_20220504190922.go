@@ -6,8 +6,7 @@ import (
 	"strings"
 )
 
-// todo 更新用户名更新了两次,更新用户名判断是否重名有问题
-// todo  终端不可输入中文, 会乱码
+// todo 
 type User struct {
 	Name   string
 	Addr   string

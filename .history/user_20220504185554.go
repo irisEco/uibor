@@ -6,8 +6,6 @@ import (
 	"strings"
 )
 
-// todo 更新用户名更新了两次,更新用户名判断是否重名有问题
-// todo  终端不可输入中文, 会乱码
 type User struct {
 	Name   string
 	Addr   string
@@ -55,10 +53,11 @@ func (u *User) Offline() {
 //处理消息业务功能
 func (u *User) Domessage(msg string) {
 	fmt.Println(msg)
+	fmt.Printf("%T", msg)
 	if strings.Contains(msg, "rename|") { // 判断是否包含 rename | 关键字来修改用户名
 		fmt.Println("进入修改用户名功能")
 		u.Rename(msg)
-	}else if strings.Contains(msg, "list") {
+	} else if msg == "list" {
 		fmt.Println("进入查询在线用户功能")
 		u.ShowList()
 	} else {

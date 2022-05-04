@@ -1,13 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"net"
 	"strings"
 )
 
-// todo 更新用户名更新了两次,更新用户名判断是否重名有问题
-// todo  终端不可输入中文, 会乱码
 type User struct {
 	Name   string
 	Addr   string
@@ -54,23 +51,20 @@ func (u *User) Offline() {
 
 //处理消息业务功能
 func (u *User) Domessage(msg string) {
-	fmt.Println(msg)
-	if strings.Contains(msg, "rename|") { // 判断是否包含 rename | 关键字来修改用户名
-		fmt.Println("进入修改用户名功能")
+	fmt.
+	if strings.Contains(msg, "rename|"){ // 判断是否包含 rename | 关键字来修改用户名
 		u.Rename(msg)
-	}else if strings.Contains(msg, "list") {
-		fmt.Println("进入查询在线用户功能")
+	}else if msg == "list" {
 		u.ShowList()
-	} else {
-		fmt.Println("进入广播功能")
+	}else {
 		u.server.BroadCast(u, msg)
 	}
 }
 
 //查询在线的所有用户
-func (u *User) ShowList() {
+func (u *User)ShowList(){
 	u.server.mapLock.Lock()
-	for _, user := range u.server.OnlineMap {
+  for _,user := range u.server.OnlineMap{
 		u.SendMsg(user.Name)
 	}
 	u.server.mapLock.Unlock()
@@ -96,7 +90,7 @@ func (u *User) Rename(msg string) {
 
 //监听当前user channel 的方法,一旦有消息,就直接写回对端客户端
 func (u *User) ListenMessage() {
-	for {
+	for{
 		msg := <-u.C
 		u.conn.Write([]byte(msg + "\n"))
 	}

@@ -1,13 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"net"
 	"strings"
 )
 
-// todo 更新用户名更新了两次,更新用户名判断是否重名有问题
-// todo  终端不可输入中文, 会乱码
 type User struct {
 	Name   string
 	Addr   string
@@ -54,26 +51,21 @@ func (u *User) Offline() {
 
 //处理消息业务功能
 func (u *User) Domessage(msg string) {
-	fmt.Println(msg)
-	if strings.Contains(msg, "rename|") { // 判断是否包含 rename | 关键字来修改用户名
-		fmt.Println("进入修改用户名功能")
+	if msg {
+	case strings.Contains(msg, "rename|"):
 		u.Rename(msg)
-	}else if strings.Contains(msg, "list") {
-		fmt.Println("进入查询在线用户功能")
-		u.ShowList()
-	} else {
-		fmt.Println("进入广播功能")
+	case strings.Contains(msg, "list"):
+	default:
 		u.server.BroadCast(u, msg)
 	}
-}
-
-//查询在线的所有用户
-func (u *User) ShowList() {
-	u.server.mapLock.Lock()
-	for _, user := range u.server.OnlineMap {
-		u.SendMsg(user.Name)
+	if find := strings.Contains(msg, "rename|"); find { // 判断是否包含 rename | 关键字来修改用户名
+		u.Rename(msg)
+	}else if {
+		
 	}
-	u.server.mapLock.Unlock()
+	} else {
+		u.server.BroadCast(u, msg)
+	}
 }
 
 //修改用户姓名
@@ -100,14 +92,9 @@ func (u *User) ListenMessage() {
 		msg := <-u.C
 		u.conn.Write([]byte(msg + "\n"))
 	}
-	for {
-		msg := <-u.C
-		u.conn.Write([]byte(msg + "\n"))
-	}
 }
 
 //发送消息
 func (u *User) SendMsg(msg string) {
-	u.conn.Write([]byte(msg + "\n"))
 	u.conn.Write([]byte(msg + "\n"))
 }
